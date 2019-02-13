@@ -1,18 +1,14 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-""" Send any telegram-supported media to this bot and it will be uploaded over transfer.sh
-    Usage:
-      $ python transferbot.py
-"""
 
-__author__ = "jhonata.poma@gmail.com (Jhonata 'bomba' Poma)"
+__author__ = "mahdikh6@gmail.com (mehrad 'Bosbaba' alizadeh)"
 
 import logging, re, requests, os
 from telegram.ext   import Updater, CommandHandler, MessageHandler
 from telegram.ext   import Filters, CallbackQueryHandler
 from telegram.ext.dispatcher import run_async
 
-VERSION     = '0.2'
+VERSION     = '0.1'
 FILES_POOL  = '/tmp/'
 CONFIG_FILE = 'conf/token.conf'
 
@@ -21,7 +17,7 @@ logger = logging.getLogger (__name__)
 
 try:
     TOKEN   = open (CONFIG_FILE, 'r').read ().replace ("\n", "")
-except Exception, e:
+except Exception as e:
     logger.error ("Could not find '%s'." %(CONFIG_FILE))
     exit (1)
 
@@ -30,7 +26,7 @@ def remove (filename):
     """
     try:
         os.remove (FILES_POOL + filename)
-    except Exception, e:
+    except Exception as e:
         logger.error ("Something went wrong, backtrace: \n%s" %(e))
         return
     logger.info ("Removed %s", filename)
@@ -42,7 +38,7 @@ def transfer (filename):
     try:
         #   Upload file
         req = requests.put (url=upload_url, data=open (FILES_POOL + filename, "r"))
-    except Exception, e:
+    except Exception as e:
         logger.error ("Something went wrong, backtrace: \n%s" %(e))
         return (e)
     logger.info ("Transferred %s", filename)
@@ -50,7 +46,7 @@ def transfer (filename):
     try:
         #   Request shall return 'https://transfer.sh/AAAA/filename'
         return (req.text.strip ())
-    except Exception, e:
+    except Exception as e:
         logger.error ("Something went wrong, backtrace: \n%s" %(e))
         return (e)
 
@@ -59,7 +55,7 @@ def download (document, filename):
     """
     try:
         document.download (FILES_POOL + filename)
-    except Exception, e:
+    except Exception as e:
         logger.error ("Something went wrong, backtrace: \n%s" %(e))
         return False
     return True
